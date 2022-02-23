@@ -14,11 +14,6 @@ class ArithmeticMixin(np.lib.mixins.NDArrayOperatorsMixin):
 
 
 class GetSetMixin:
-    def __init__(self, data: List[List[Union[int, float]]]):
-        row_lens = [len(row) for row in data]
-        assert min(row_lens) == max(row_lens), "All the rows must have the same length."
-        self._data = deepcopy(data)
-
     @property
     def shape(self) -> Tuple[int, int]:
         return len(self._data), len(self._data[0])
@@ -41,3 +36,8 @@ class WriteToFileMixin:
     def save(self, filepath: str):
         with open(filepath, "w") as f:
             f.write(str(self))
+
+
+class HashMixin:
+    def __hash__(self):
+        return sum([int(sum(row)) for row in self.data]) % (int(1e9) + 7)
